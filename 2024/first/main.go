@@ -7,7 +7,6 @@ import (
 	"slices"
 	"strconv"
 	"strings"
-	"sync"
 )
 
 func main() {
@@ -26,61 +25,46 @@ func main() {
 
 	a, b, err := transformInput(buf)
 
-	// Assuming dataset are large enough to prevent goroutine creation overhead
-	wg := sync.WaitGroup{}
-	wg.Add(2)
-
-	go func(group *sync.WaitGroup) {
-		slices.Sort(a)
-		defer group.Done()
-	}(&wg)
-
-	go func(group *sync.WaitGroup) {
-		slices.Sort(b)
-		defer group.Done()
-	}(&wg)
-
-	wg.Wait()
-
 	distance, similarity := resolve(a, b)
 
 	fmt.Printf("Distance is %.0f\n Similarity is %d\n", distance, similarity)
 
 }
 
+/*
+
+Given two unordered integer array, find the total distance and similarity among them
+
+Pair up the smallest number in the left list with the smallest number in the right list, then the second-smallest left number with the second-smallest right number, and so on.
+Within each pair, figure out how far apart the two numbers are; you'll need to add up all of those distances.
+
+For example, if you pair up a 3 from the left list with a 7 from the right list, the distance apart is 4; if you pair up a 9 with a 3, the distance apart is 6.
+
+To find the total distance between the left list and the right list, add up the distances between all the pairs you found.
+Calculate a total similarity score by adding up each number in the left list after multiplying it by the number of times that number appears in the right list.
+
+Full problem here : https://adventofcode.com/2024/day/1
+
+**/
+
 func resolve(a []int, b []int) (float64, int) {
 
-	var distance float64 = 0
+	var (
+		distance    float64
+		similarity  int
+		occurrences map[int]int = make(map[int]int, len(b))
+	)
 
-	// Assuming dataset are large enough to prevent goroutine creation overhead
-	wg := sync.WaitGroup{}
-	wg.Add(2)
-
-	go func(group *sync.WaitGroup) {
-		slices.Sort(a)
-		defer group.Done()
-	}(&wg)
-
-	go func(group *sync.WaitGroup) {
-		slices.Sort(b)
-		defer group.Done()
-	}(&wg)
-
-	wg.Wait()
-
-	for i, _ := range a {
-		distance += math.Abs(float64(a[i] - b[i]))
-	}
-
-	var similarity int = 0
-	occurrences := make(map[int]int, len(b))
+	slices.Sort(a)
+	slices.Sort(b)
 
 	for _, item := range b {
 		occurrences[item]++
 	}
 
-	for _, item := range a {
+	for i, item := range a {
 		similarity += item * occurrences[item]
+		distance += math.Abs(float64(a[i] - b[i]))
 	}
 
 	return distance, similarity
