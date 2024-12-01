@@ -11,7 +11,7 @@ func TestResolve(t *testing.T) {
 	cases := []struct {
 		Description string
 		Input       Input
-		Distance    int
+		Distance    float64
 	}{
 		{
 			Description: "Example Input",
@@ -22,7 +22,9 @@ func TestResolve(t *testing.T) {
 
 	for _, c := range cases {
 		t.Run(c.Description, func(t *testing.T) {
-
+			if got := resolve(c.Input.a, c.Input.b); got != c.Distance {
+				t.Errorf("resolve(%v, %v) = %f, want %f", c.Input.a, c.Input.b, got, c.Distance)
+			}
 		})
 	}
 }
