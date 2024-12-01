@@ -24,15 +24,35 @@ func main() {
 		panic(fmt.Errorf("Error reading input file: %w", err))
 	}
 
-	a, b, err := readInput(buf)
+	a, b, err := transformInput(buf)
 
-	fmt.Printf("Distance is %.0f\n", resolve(a, b))
+	// Assuming dataset are large enough to prevent goroutine creation overhead
+	wg := sync.WaitGroup{}
+	wg.Add(2)
+
+	go func(group *sync.WaitGroup) {
+		slices.Sort(a)
+		defer group.Done()
+	}(&wg)
+
+	go func(group *sync.WaitGroup) {
+		slices.Sort(b)
+		defer group.Done()
+	}(&wg)
+
+	wg.Wait()
+
+	distance, similarity := resolve(a, b)
+
+	fmt.Printf("Distance is %.0f\n Similarity is %d\n", distance, similarity)
+
 }
 
-func resolve(a []int, b []int) float64 {
+func resolve(a []int, b []int) (float64, int) {
 
 	var distance float64 = 0
 
+	// Assuming dataset are large enough to prevent goroutine creation overhead
 	wg := sync.WaitGroup{}
 	wg.Add(2)
 
@@ -52,10 +72,21 @@ func resolve(a []int, b []int) float64 {
 		distance += math.Abs(float64(a[i] - b[i]))
 	}
 
-	return distance
+	var similarity int = 0
+	occurrences := make(map[int]int, len(b))
+
+	for _, item := range b {
+		occurrences[item]++
+	}
+
+	for _, item := range a {
+		similarity += item * occurrences[item]
+	}
+
+	return distance, similarity
 }
 
-func readInput(buf []byte) ([]int, []int, error) {
+func transformInput(buf []byte) ([]int, []int, error) {
 
 	lines := strings.Split(string(buf), "\n")
 
