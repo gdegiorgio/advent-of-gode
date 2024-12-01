@@ -1,2 +1,3 @@
 2024-1:
-	go run ./2024/first.go
+	cd ./2024/first
+	go run main.go
