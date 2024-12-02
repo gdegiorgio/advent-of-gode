@@ -35,7 +35,12 @@ Given an integer matrix return the number of "safe" array
 
 An array of integer is "safe" if is sorted (asc or desc) and distances among elements is not greater than 3
 
+2nd Part : An unsafe array is considered safe if removing an item meets the above property
+
 Distance(i,j) = abs(i-j)
+
+
+
 
 Full problem here : https://adventofcode.com/2024/day/2
 
@@ -44,13 +49,13 @@ Full problem here : https://adventofcode.com/2024/day/2
 func resolve(levelsMatrix [][]int) int {
 	var safe int = 0
 	for _, levels := range levelsMatrix {
-		safe += isSafe(levels)
+		safe += isSafe(levels, true)
 	}
 	return safe
 }
 
 // isSafe returns 1 if level is safe, 0 otherwise
-func isSafe(levels []int) int {
+func isSafe(levels []int, itemRemoval bool) int {
 
 	// Guess the sorting
 	var sortingAsc bool = levels[1] >= levels[0]
@@ -60,16 +65,25 @@ func isSafe(levels []int) int {
 		// If number sorting is asc but numbers are decreasing then is unsafe
 
 		if sortingAsc && levels[i+1] < levels[i] {
+			if itemRemoval {
+				return isSafe(removeItem(levels, i), false) + isSafe(removeItem(levels, i+1), false)
+			}
 			return 0
 		}
 
 		// If number sorting is desc but numbers are increasing then is unsafe
 		if !sortingAsc && levels[i+1] > levels[i] {
+			if itemRemoval {
+				return isSafe(removeItem(levels, i), false) + isSafe(removeItem(levels, i+1), false)
+			}
 			return 0
 		}
 
 		// If distance is more than 3 or less than 1
 		if (math.Abs(float64(levels[i]-levels[i+1])) > 3) || (math.Abs(float64(levels[i]-levels[i+1])) < 1) {
+			if itemRemoval {
+				return isSafe(removeItem(levels, i), false) + isSafe(removeItem(levels, i+1), false)
+			}
 			return 0
 		}
 
@@ -91,4 +105,8 @@ func bufferToLevels(buf []byte) [][]int {
 		matrix[i] = levelArray
 	}
 	return matrix
+}
+
+func removeItem(a []int, i int) []int {
+	return append(a[:i], a[i+1:]...)
 }

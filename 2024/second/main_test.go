@@ -31,3 +31,13 @@ func TestResolve(t *testing.T) {
 		})
 	}
 }
+
+func TestRemoveItem(t *testing.T) {
+	arr := []int{1, 2, 4}
+	expected := []int{1, 4}
+	actual := removeItem(arr, 1)
+	if len(actual) != len(arr)-1 {
+		t.Errorf("removeItem(%v, 1) = %v ; want %v", arr, actual, expected)
+	}
+
+}
