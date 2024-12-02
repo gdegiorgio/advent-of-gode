@@ -56,16 +56,19 @@ func isSafe(levels []int) int {
 	var sortingAsc bool = levels[1] >= levels[0]
 
 	for i := 0; i < len(levels)-1; i++ {
-		// If number sorting is asc, number are decreasing or distance more than 3 or less than 1 then is unsafe
+
+		// If number sorting is asc but numbers are decreasing then is unsafe
 
 		if sortingAsc && levels[i+1] < levels[i] {
 			return 0
 		}
 
+		// If number sorting is desc but numbers are increasing then is unsafe
 		if !sortingAsc && levels[i+1] > levels[i] {
 			return 0
 		}
 
+		// If distance is more than 3 or less than 1
 		if (math.Abs(float64(levels[i]-levels[i+1])) > 3) || (math.Abs(float64(levels[i]-levels[i+1])) < 1) {
 			return 0
 		}
