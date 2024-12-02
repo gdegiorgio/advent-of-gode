@@ -59,34 +59,35 @@ func isSafe(levels []int, itemRemoval bool) int {
 
 	// Guess the sorting
 	var sortingAsc bool = levels[1] >= levels[0]
+	var unsafe bool = false
 
 	for i := 0; i < len(levels)-1; i++ {
 
 		// If number sorting is asc but numbers are decreasing then is unsafe
 
 		if sortingAsc && levels[i+1] < levels[i] {
-			if itemRemoval {
-				return isSafe(removeItem(levels, i), false) + isSafe(removeItem(levels, i+1), false)
-			}
-			return 0
+			unsafe = true
 		}
 
 		// If number sorting is desc but numbers are increasing then is unsafe
 		if !sortingAsc && levels[i+1] > levels[i] {
-			if itemRemoval {
-				return isSafe(removeItem(levels, i), false) + isSafe(removeItem(levels, i+1), false)
-			}
-			return 0
+			unsafe = true
 		}
 
 		// If distance is more than 3 or less than 1
 		if (math.Abs(float64(levels[i]-levels[i+1])) > 3) || (math.Abs(float64(levels[i]-levels[i+1])) < 1) {
-			if itemRemoval {
-				return isSafe(removeItem(levels, i), false) + isSafe(removeItem(levels, i+1), false)
-			}
-			return 0
+			unsafe = true
 		}
 
+		// If I can try to remove one of the two items
+		if unsafe && itemRemoval {
+			return isSafe(removeItem(levels, i), false) + isSafe(removeItem(levels, i+1), false)
+		}
+	}
+
+	// Still unsafe after itemRemoval or safe
+	if unsafe {
+		return 0
 	}
 	return 1
 }
