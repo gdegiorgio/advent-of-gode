@@ -62,7 +62,7 @@ func resolve(buf string) int {
 			}
 		}
 
-		// trying to read reading mul
+		// Reading mul
 		if char == 'm' {
 			// Max chars based on mul(999,999)
 			for j := i; j <= i+11; j++ {
@@ -84,6 +84,7 @@ func resolve(buf string) int {
 	return sum
 }
 
+// isVaildMul checks whether the string is of type mul(x,y). If valid, returns x, y and no error, otherwise 0, 0 and error
 func isValidMul(s string) (int, int, error) {
 
 	var leftString, rightString string
