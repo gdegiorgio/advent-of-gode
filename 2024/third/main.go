@@ -30,18 +30,44 @@ func main() {
 // mul(1,2) + mul(1,3)...
 
 func resolve(buf string) int {
-	sum := 0
+
+	var (
+		do  bool = true
+		sum int
+	)
+
 	for i, char := range buf {
+		// reading do/don't
+		if char == 'd' {
+			// max chars based on don't
+			for j := i; j <= i+7; j++ {
+				if string(buf[j]) == ")" {
+					result := isValidCommand(buf[i : j+1])
+					if result == 1 {
+						fmt.Printf("Found a do at index %d, enabling..\n", i)
+						do = true
+					}
+					if result == -1 {
+						fmt.Printf("Found a don't at index %d, disabling..\n", i)
+						do = false
+					}
+				}
+			}
+		}
+
+		// trying to read reading mul
 		if char == 'm' {
 			// Max chars based on mul(999,999)
 			for j := i; j <= i+11; j++ {
 				if string(buf[j]) == ")" {
 					left, right, err := isValidMul(buf[i : j+1])
-					if err != nil {
-						i = j
-					} else {
-						fmt.Printf("Found mul : %s", buf[i:j+1])
-						sum += left * right
+					if err == nil {
+						if do {
+							fmt.Printf("Found mul : %s\n", buf[i:j+1])
+							sum += left * right
+						} else {
+							fmt.Printf("Found disabled: %s\n", buf[i:j+1])
+						}
 					}
 				}
 			}
@@ -81,7 +107,7 @@ func isValidMul(s string) (int, int, error) {
 		}
 	}
 
-	// find left number
+	// find right number
 	// Max digits are 3
 	i = 0
 	for j := 0; j < 3; j++ {
@@ -97,4 +123,25 @@ func isValidMul(s string) (int, int, error) {
 	right, err := strconv.Atoi(rightString)
 
 	return left, right, nil
+}
+
+// isValidCommand returns 1 if command is a Do, -1 if command is a don't 0 otherwise
+func isValidCommand(s string) int {
+
+	patternDo, err := regexp.Compile("^do\\(\\)$")
+	patternDont, err := regexp.Compile("^don't\\(\\)$")
+
+	if err != nil {
+		return 0
+	}
+
+	if patternDo.MatchString(s) {
+		return 1
+	}
+
+	if patternDont.MatchString(s) {
+		return -1
+	}
+
+	return 0
 }

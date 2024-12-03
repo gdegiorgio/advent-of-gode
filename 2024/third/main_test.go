@@ -8,7 +8,6 @@ func TestResolve(t *testing.T) {
 		Input       string
 		Want        int
 	}{
-		// 430348
 		{Description: "Example", Input: "mul(542,794):{from()how() ^,mul(511,377)>:why():)", Want: 622995},
 	}
 	for _, c := range cases {
@@ -56,6 +55,31 @@ func TestIsValidMul(t *testing.T) {
 
 			if left != c.Want.left || right != c.Want.right {
 				t.Errorf("isValidMul(%q) = (%d,%d), want (%d,%d)", c.Input, left, right, c.Want.left, c.Want.right)
+			}
+		})
+	}
+}
+
+func TestIsValidCommand(t *testing.T) {
+	cases := []struct {
+		Description string
+		Input       string
+		Want        int
+	}{
+		{Description: "Valid Do Command", Input: "do()", Want: 1},
+		{Description: "Valid Don't Command", Input: "don't()", Want: -1},
+		{Description: "Invalid Do Command", Input: "do_()", Want: 0},
+		{Description: "Invalid Don't Command", Input: "dont()", Want: 0},
+		{Description: "Special Characters 1", Input: "d0n't()", Want: 0},
+		{Description: "Special Characters 2", Input: "d0()", Want: 0},
+		{Description: "Special Characters 3", Input: "don!t()", Want: 0},
+		{Description: "Special Characters 4", Input: "do(!)", Want: 0},
+	}
+
+	for _, c := range cases {
+		t.Run(c.Description, func(t *testing.T) {
+			if result := isValidCommand(c.Input); result != c.Want {
+				t.Errorf("isValidCommand(%q) = %d, want %d", c.Input, result, c.Want)
 			}
 		})
 	}
