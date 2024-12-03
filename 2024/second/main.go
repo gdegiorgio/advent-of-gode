@@ -33,9 +33,9 @@ func main() {
 
 Given an integer matrix return the number of "safe" array
 
-An array of integer is "safe" if is sorted (asc or desc) and distances among elements is not greater than 3
+An array of integer is "safe" if is sorted (asc or desc) and distances among elements is not greater than 3 or less than 1
 
-2nd Part : An unsafe array is considered safe if removing an item meets the above property
+An unsafe array is considered safe if removing an item meets the above property
 
 Distance(i,j) = abs(i-j)
 
@@ -49,7 +49,11 @@ Full problem here : https://adventofcode.com/2024/day/2
 func resolve(levelsMatrix [][]int) int {
 	var safe int = 0
 	for _, levels := range levelsMatrix {
-		safe += isSafe(levels, true)
+		val := isSafe(levels, true)
+		if val == 0 {
+			fmt.Printf("Unsafe %v\n", levels)
+		}
+		safe += val
 	}
 	return safe
 }
@@ -60,6 +64,7 @@ func isSafe(levels []int, itemRemoval bool) int {
 	// Guess the sorting
 	var sortingAsc bool = levels[1] >= levels[0]
 	var unsafe bool = false
+	var memo map[int]int = make(map[int]int)
 
 	for i := 0; i < len(levels)-1; i++ {
 
@@ -80,8 +85,38 @@ func isSafe(levels []int, itemRemoval bool) int {
 		}
 
 		// If I can try to remove one of the two items
-		if unsafe && itemRemoval {
-			return isSafe(removeItem(levels, i), false) + isSafe(removeItem(levels, i+1), false)
+		if unsafe {
+
+			if !itemRemoval {
+				return 0
+			}
+
+			var left int
+			var right int
+
+			// memoization on levels[i]
+			if val, ok := memo[i]; ok {
+				left = val
+			} else {
+				safe := isSafe(removeItem(levels, i), false)
+				memo[i] = safe
+				left = safe
+			}
+
+			// memoization on levels[i+1]
+			if val, ok := memo[i+1]; ok {
+				left = val
+			} else {
+				safe := isSafe(removeItem(levels, i+1), false)
+				memo[i+1] = safe
+				right = safe
+			}
+
+			if left == 1 || right == 1 {
+				return 1
+			} else {
+				return 0
+			}
 		}
 	}
 
@@ -109,5 +144,8 @@ func bufferToLevels(buf []byte) [][]int {
 }
 
 func removeItem(a []int, i int) []int {
-	return append(a[:i], a[i+1:]...)
+	res := make([]int, 0, len(a)-1)
+	res = append(res, a[:i]...)
+	res = append(res, a[i+1:]...)
+	return res
 }
