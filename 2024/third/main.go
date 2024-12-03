@@ -28,6 +28,8 @@ func main() {
 
 // Find all "mul(X,Y)" occurrences in input.txt then return
 // mul(1,2) + mul(1,3)...
+// If you find a do(), enable all next mul until you find a don't()
+// If you find a don't(), disable all next mul until you find a do()
 
 func resolve(buf string) int {
 
