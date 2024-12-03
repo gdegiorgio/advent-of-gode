@@ -7,7 +7,7 @@ type Input struct {
 	b []int
 }
 
-func TestResolvePartOne(t *testing.T) {
+func TestResolve(t *testing.T) {
 	cases := []struct {
 		Description string
 		Input       Input

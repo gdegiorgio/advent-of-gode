@@ -26,6 +26,7 @@ func main() {
 	safe := resolve(levelsMatrix)
 
 	fmt.Printf("Safe levels : %d\n", safe)
+	fmt.Printf("Unsafe levels : %d\n", len(levelsMatrix)-safe)
 
 }
 
@@ -50,9 +51,6 @@ func resolve(levelsMatrix [][]int) int {
 	var safe int = 0
 	for _, levels := range levelsMatrix {
 		val := isSafe(levels, true)
-		if val == 0 {
-			fmt.Printf("Unsafe %v\n", levels)
-		}
 		safe += val
 	}
 	return safe
@@ -105,7 +103,7 @@ func isSafe(levels []int, itemRemoval bool) int {
 
 			// memoization on levels[i+1]
 			if val, ok := memo[i+1]; ok {
-				left = val
+				right = val
 			} else {
 				safe := isSafe(removeItem(levels, i+1), false)
 				memo[i+1] = safe
@@ -120,10 +118,7 @@ func isSafe(levels []int, itemRemoval bool) int {
 		}
 	}
 
-	// Still unsafe after itemRemoval or safe
-	if unsafe {
-		return 0
-	}
+	// safe
 	return 1
 }
 
@@ -144,8 +139,10 @@ func bufferToLevels(buf []byte) [][]int {
 }
 
 func removeItem(a []int, i int) []int {
+	fmt.Printf("Removing item %d from %v\n", i, a)
 	res := make([]int, 0, len(a)-1)
 	res = append(res, a[:i]...)
 	res = append(res, a[i+1:]...)
+	fmt.Printf("Removed : %v from %v\n", res, a)
 	return res
 }
