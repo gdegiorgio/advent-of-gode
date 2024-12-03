@@ -59,67 +59,41 @@ func resolve(levelsMatrix [][]int) int {
 // isSafe returns 1 if level is safe, 0 otherwise
 func isSafe(levels []int, itemRemoval bool) int {
 
-	// Guess the sorting
-	var sortingAsc bool = levels[1] >= levels[0]
-	var unsafe bool = false
-	var memo map[int]int = make(map[int]int)
+	var safe bool = true
 
 	for i := 0; i < len(levels)-1; i++ {
 
-		// If number sorting is asc but numbers are decreasing then is unsafe
-
-		if sortingAsc && levels[i+1] < levels[i] {
-			unsafe = true
+		if levels[i] > levels[i+1] {
+			if !isSortedDesc(levels) {
+				safe = false
+			}
 		}
 
-		// If number sorting is desc but numbers are increasing then is unsafe
-		if !sortingAsc && levels[i+1] > levels[i] {
-			unsafe = true
+		if levels[i] < levels[i+1] {
+			if !isSortedAsc(levels) {
+				safe = false
+			}
 		}
 
 		// If distance is more than 3 or less than 1
 		if (math.Abs(float64(levels[i]-levels[i+1])) > 3) || (math.Abs(float64(levels[i]-levels[i+1])) < 1) {
-			unsafe = true
+			safe = false
 		}
 
-		// If I can try to remove one of the two items
-		if unsafe {
-
-			if !itemRemoval {
-				return 0
-			}
-
-			var left int
-			var right int
-
-			// memoization on levels[i]
-			if val, ok := memo[i]; ok {
-				left = val
-			} else {
-				safe := isSafe(removeItem(levels, i), false)
-				memo[i] = safe
-				left = safe
-			}
-
-			// memoization on levels[i+1]
-			if val, ok := memo[i+1]; ok {
-				right = val
-			} else {
-				safe := isSafe(removeItem(levels, i+1), false)
-				memo[i+1] = safe
-				right = safe
-			}
-
-			if left == 1 || right == 1 {
+		// Can I remove one item?
+		if !safe && itemRemoval {
+			left := isSafe(removeItem(levels, i), false)
+			right := isSafe(removeItem(levels, i+1), false)
+			if left+right > 0 {
 				return 1
-			} else {
-				return 0
 			}
+
 		}
 	}
-
-	// safe
-	return 1
+	if safe {
+		return 1
+	}
+	return 0
 }
 
 func bufferToLevels(buf []byte) [][]int {
@@ -145,4 +119,22 @@ func removeItem(a []int, i int) []int {
 	res = append(res, a[i+1:]...)
 	fmt.Printf("Removed : %v from %v\n", res, a)
 	return res
+}
+
+func isSortedAsc(a []int) bool {
+	for i := 0; i < len(a)-1; i++ {
+		if a[i] > a[i+1] {
+			return false
+		}
+	}
+	return true
+}
+
+func isSortedDesc(a []int) bool {
+	for i := 0; i < len(a)-1; i++ {
+		if a[i] < a[i+1] {
+			return false
+		}
+	}
+	return true
 }

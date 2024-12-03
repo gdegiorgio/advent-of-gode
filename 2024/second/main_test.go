@@ -81,37 +81,37 @@ func TestIsSafe(t *testing.T) {
 		{
 			Description: "Example Unsafe 7",
 			Input:       []int{61, 67, 67, 70, 72, 73, 78},
-			Safe:        0, // Assuming index 1 (67) gets removed
+			Safe:        0,
 		},
 		{
 			Description: "Example Unsafe 8",
 			Input:       []int{55, 51, 48, 43, 45},
-			Safe:        0, // Assuming index 2 (48) gets removed
+			Safe:        0,
 		},
 		{
 			Description: "Example Unsafe 9",
 			Input:       []int{65, 66, 65, 62, 64, 62, 55},
-			Safe:        0, // Assuming index 4 (64) gets removed
+			Safe:        0,
 		},
 		{
 			Description: "Example Unsafe 10",
 			Input:       []int{57, 53, 51, 50, 53, 55},
-			Safe:        0, // Assuming index 3 (50) gets removed
+			Safe:        0,
 		},
 		{
 			Description: "Example Unsafe 11",
 			Input:       []int{75, 69, 66, 69, 68, 66, 62},
-			Safe:        0, // Assuming index 2 (66) gets removed
+			Safe:        0,
 		},
 		{
 			Description: "Example Unsafe 12",
 			Input:       []int{45, 47, 48, 48, 49, 51, 53, 53},
-			Safe:        0, // Assuming index 2 (48) gets removed
+			Safe:        0,
 		},
 		{
 			Description: "Example Unsafe 13",
 			Input:       []int{57, 53, 52, 49, 48, 47, 43, 39},
-			Safe:        0, // Assuming index 0 (57) gets removed
+			Safe:        0,
 		},
 		{
 			Description: "Edge Case Remove Last",
@@ -121,6 +121,56 @@ func TestIsSafe(t *testing.T) {
 		{
 			Description: "Edge Case Remove First",
 			Input:       []int{7, 8, 6, 4, 2},
+			Safe:        1,
+		},
+		{
+			Description: "Edge Case",
+			Input:       []int{48, 46, 47, 49, 51, 54, 56},
+			Safe:        1,
+		},
+		{
+			Description: "Edge Case",
+			Input:       []int{1, 1, 2, 3, 4, 5},
+			Safe:        1,
+		},
+		{
+			Description: "Edge Case",
+			Input:       []int{1, 2, 3, 4, 5, 5},
+			Safe:        1,
+		},
+		{
+			Description: "Edge Case",
+			Input:       []int{6, 1, 2, 3, 4, 5},
+			Safe:        1,
+		},
+		{
+			Description: "Edge Case",
+			Input:       []int{1, 4, 3, 2, 1},
+			Safe:        1,
+		},
+		{
+			Description: "Edge Case",
+			Input:       []int{1, 6, 7, 8, 9},
+			Safe:        1,
+		},
+		{
+			Description: "Edge Case",
+			Input:       []int{1, 2, 3, 4, 3},
+			Safe:        1,
+		},
+		{
+			Description: "Edge Case",
+			Input:       []int{9, 8, 7, 6, 7},
+			Safe:        1,
+		},
+		{
+			Description: "Edge Case",
+			Input:       []int{7, 10, 8, 10, 11},
+			Safe:        1,
+		},
+		{
+			Description: "Edge Case",
+			Input:       []int{29, 28, 27, 25, 26, 25, 22, 20},
 			Safe:        1,
 		},
 	}
