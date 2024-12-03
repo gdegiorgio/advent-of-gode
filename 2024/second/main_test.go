@@ -39,23 +39,28 @@ func TestIsSafe(t *testing.T) {
 		Safe        int
 	}{
 		{
-			Description: "Example Input 1",
+			Description: "Example Safe No Removing",
 			Input:       []int{1, 3, 6, 7, 9},
 			Safe:        1,
 		},
 		{
-			Description: "Example Input 2",
+			Description: "Example Safe One Removal",
 			Input:       []int{8, 6, 4, 4, 1},
 			Safe:        1,
 		},
 		{
-			Description: "Example Input 3",
+			Description: "Example Unsafe",
 			Input:       []int{8, 6, 4, 4, 4, 1},
 			Safe:        0,
 		},
 		{
-			Description: "Example Input 4",
+			Description: "Edge Case Remove Last",
 			Input:       []int{8, 6, 4, 2, 7},
+			Safe:        1,
+		},
+		{
+			Description: "Edge Case Remove First",
+			Input:       []int{7, 8, 6, 4, 2},
 			Safe:        1,
 		},
 	}
