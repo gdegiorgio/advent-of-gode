@@ -26,10 +26,15 @@ func main() {
 	fmt.Printf("Total sum is : %d\n", sum)
 }
 
-// Find all "mul(X,Y)" occurrences in input.txt then return
-// mul(1,2) + mul(1,3)...
-// If you find a do(), enable all next mul until you find a don't()
-// If you find a don't(), disable all next mul until you find a do()
+/*
+Find all "mul(X,Y)" occurrences in input.txt then return
+mul(1,2) + mul(1,3)... evaluating mul(x,y) as x*y
+If you find a do(), enable all next mul until you find a don't()
+If you find a don't(), disable all next mul until you find a do()
+
+
+Full problem here : https://adventofcode.com/2024/day/3
+**/
 
 func resolve(buf string) int {
 
