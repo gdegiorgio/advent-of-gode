@@ -17,7 +17,7 @@ func main() {
 		panic(fmt.Sprintf("cannot get working direcory - %s", err))
 	}
 
-	file, err := os.Open(fmt.Sprintf("%s/input.txt", workingDirectory))
+	file, err := os.Open(fmt.Sprintf("%s/_.txt", workingDirectory))
 
 	if err != nil {
 		panic(fmt.Errorf("error reading input file: %w", err))

@@ -15,7 +15,7 @@ func main() {
 		panic(fmt.Sprintf("cannot get working direcory - %s", err))
 	}
 
-	buf, err := os.ReadFile(fmt.Sprintf("%s/input.txt", workingDirectory))
+	buf, err := os.ReadFile(fmt.Sprintf("%s/_.txt", workingDirectory))
 
 	if err != nil {
 		panic(fmt.Errorf("error reading input file: %w", err))
@@ -27,7 +27,7 @@ func main() {
 }
 
 /*
-Find all "mul(X,Y)" occurrences in input.txt then return
+Find all "mul(X,Y)" occurrences in _.txt then return
 mul(1,2) + mul(1,3)... evaluating mul(x,y) as x*y
 If you find a do(), enable all next mul until you find a don't()
 If you find a don't(), disable all next mul until you find a do()
